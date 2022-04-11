@@ -98,3 +98,58 @@ function social_link_classes( $classes, $item, $args ) {
 
 add_filter( 'nav_menu_css_class', 'social_link_classes', 10, 4 );
 
+/**
+ * Registrera en Custom Post Type
+ * https://developer.wordpress.org/plugins/post-types/
+ *
+ * Läs mer om funktionen register_post_type och dess argument nedan.
+ * https://developer.wordpress.org/reference/functions/register_post_type/
+ *
+ */
+function my_custom_post_type() {
+	register_post_type( '', [
+		'labels'      => [
+			'name'          => __( '' ),
+			'singular_name' => __( '' ),
+		],
+		'public'      => true,
+		'has_archive' => true,
+		'rewrite'     => [],
+		'menu_icon'   => '',
+		'supports'    => [],
+	] );
+}
+
+add_action( 'init', 'my_custom_post_type', );
+
+/**
+ * Registrera Custom Taxonomies
+ * https://developer.wordpress.org/plugins/taxonomies/
+ *
+ * Mer information kring funktionen register_taxonomy
+ * https://developer.wordpress.org/reference/functions/register_taxonomy/
+ */
+
+// Bättre namn på funktionen....
+function my_custom_tax() {
+	$labels = [
+		'name'              => _x( '', 'taxonomy general name' ),
+		'singular_name'     => _x( '', 'taxonomy singular name' ),
+		// Läs på om och lägg till fler vi behov!
+	];
+	$args   = [];
+	register_taxonomy( '' , [], $args );
+}
+add_action( 'init', 'my_custom_tax' );
+
+/**
+ * Custom Meta Boxes
+ *
+ * För att jobba med custom innehåll, "formulär fält", på olika post types.
+ *
+ * Läs och förstår hur de fungerar. Testa gärna att lägga till något manuellt.
+ * https://developer.wordpress.org/plugins/metadata/
+ *
+ * Advanced Custom Fields är ett plugin som vanligen användas för att skapa sådana här meta-fält.
+ * https://www.advancedcustomfields.com/
+ */
