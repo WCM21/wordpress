@@ -16,8 +16,8 @@ if ( ! function_exists( 'wcm_theme_setup' ) ) {
 		// Registrerar platser för våra fasta menyer. Visas i temat med wp_nav_menu()
 		register_nav_menus(
 			[
-				'primary' => esc_html__( 'Main navigation', 'wcmtheme' ),
-				'footer'  => esc_html__( 'Footer navigation', 'wcmtheme' ),
+				'primary' => __( 'Main navigation', 'wcmtheme' ),
+				'footer'  => __( 'Footer navigation', 'wcmtheme' ),
 			]
 		);
 
@@ -74,6 +74,8 @@ if ( ! function_exists( 'wcm_theme_setup' ) ) {
 
 		add_image_size( 'wcm-gallery', '500', '300', true );
 	}
+
+	load_theme_textdomain( 'wcmtheme', get_template_directory() . '/languages' );
 }
 add_action( 'after_setup_theme', 'wcm_theme_setup' );
 
@@ -83,19 +85,19 @@ add_action( 'after_setup_theme', 'wcm_theme_setup' );
  * @return void
  */
 function add_theme_scripts() {
-	wp_enqueue_style( 'style', get_theme_file_uri( 'dist/index.css' ), );
+	wp_enqueue_style( 'style', get_theme_file_uri( 'dist/index.css' ) );
 }
 
 add_action( 'wp_enqueue_scripts', 'add_theme_scripts' );
 
 function social_link_classes( $classes, $item, $args ) {
 	if ( 'footer' === $args->theme_location ) {
+		//$classes = ["social-link"];
 		$classes[] = "social-link";
 	}
 
 	return $classes;
 }
-
 add_filter( 'nav_menu_css_class', 'social_link_classes', 10, 4 );
 
 /**
@@ -107,20 +109,21 @@ add_filter( 'nav_menu_css_class', 'social_link_classes', 10, 4 );
  *
  */
 function my_custom_post_type() {
-	register_post_type( '', [
+	register_post_type( 'wcm_students', [
 		'labels'      => [
-			'name'          => __( '' ),
-			'singular_name' => __( '' ),
+			'name'          => __( 'Students', 'wcmtheme' ),
+			'singular_name' => __( 'Student', 'wcmtheme' ),
 		],
 		'public'      => true,
 		'has_archive' => true,
-		'rewrite'     => [],
+		'rewrite'     => ['slug' => 'students'],
 		'menu_icon'   => '',
-		'supports'    => [],
+		'taxonomies' => ['wcm_classes'],
+		'supports'    => ['title', 'editor', 'thumbnail', 'custom-fields'],
 	] );
 }
 
-add_action( 'init', 'my_custom_post_type', );
+add_action( 'init', 'my_custom_post_type', 5 );
 
 /**
  * Registrera Custom Taxonomies
@@ -133,14 +136,21 @@ add_action( 'init', 'my_custom_post_type', );
 // Bättre namn på funktionen....
 function my_custom_tax() {
 	$labels = [
-		'name'              => _x( '', 'taxonomy general name' ),
-		'singular_name'     => _x( '', 'taxonomy singular name' ),
+		'name'              => _x( 'Classes', 'taxonomy general name', 'wcmtheme' ),
+		'singular_name'     => _x( 'Class', 'taxonomy singular name','wcmtheme' ),
 		// Läs på om och lägg till fler vi behov!
 	];
-	$args   = [];
-	register_taxonomy( '' , [], $args );
+	$args   = [
+		'hierarchical'      => true,
+		'labels'            => $labels,
+		'show_ui'           => true,
+		'show_admin_column' => true,
+		'query_var'         => true,
+		'rewrite'           => array( 'slug' => 'classes' ),
+	];
+	register_taxonomy( 'wcm_classes' , ['post'], $args );
 }
-add_action( 'init', 'my_custom_tax' );
+add_action( 'init', 'my_custom_tax',4 );
 
 /**
  * Custom Meta Boxes

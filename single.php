@@ -6,10 +6,8 @@
 		while ( have_posts() ) : the_post(); ?>
             <article <?php post_class(); ?> id="post-<?php the_ID(); ?>">
                 <a href="<?php the_permalink(); ?>"><h2><?php the_title(); ?></h2></a>
-                <div id="our-post-thumbnail">
-					<?php the_post_thumbnail( 'wcm-gallery' ); ?>
-                </div>
-				<?php the_excerpt(); ?>
+	            <?php get_template_part('template-parts/content', 'thumbnail' ); ?>
+				<?php the_content(); ?>
             </article>
 		<?php
 		endwhile;

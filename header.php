@@ -5,7 +5,7 @@
 		<meta name="viewport"
 		      content="width=device-width, initial-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="ie=edge">
-		<title><?php wp_title( '|', true, 'right' ); ?></title>
+
         <meta name="description" content="">
         <meta name="author" content="">
 
@@ -26,8 +26,15 @@
         <header>
             <div><!-- Logo --></div>
 	        <?php wp_nav_menu( [
-                'theme_location' => 'primary',
-                'container' => 'nav',
-                'depth' => 2,
-            ] ); ?>
+		        'theme_location' => 'primary',
+		        'container' => 'nav',
+		        'depth' => 1,
+	        ] ); ?>
         </header>
+	    <?php
+	    if ( have_posts() ) : while ( have_posts() ) : the_post(); ?>
+        <?php if(is_sticky() ) :?>
+                <div style="background-color: indianred; color:#fff; padding: 20px; position: sticky; top: 0;">
+                    <?php the_title(); ?>
+                </div>
+        <?php endif; endwhile; endif; rewind_posts(); ?>
